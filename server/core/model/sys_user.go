@@ -8,3 +8,7 @@ type SysUser struct {
 	Phone    string
 	Email    string
 }
+
+func (entity *SysUser) TableName() string {
+	return "sys_user"
+}
