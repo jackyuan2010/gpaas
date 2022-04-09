@@ -1,4 +1,4 @@
-package gpaasgorm
+package gorm
 
 import (
 	"gorm.io/gorm"

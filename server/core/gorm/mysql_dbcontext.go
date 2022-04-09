@@ -1,4 +1,4 @@
-package gpaasgorm
+package gorm
 
 import (
 	"gorm.io/driver/mysql"
@@ -8,7 +8,7 @@ import (
 type MysqlDbContext struct {
 }
 
-func (pgdc *MysqlDbContext) GetDb(dsn *DbDsn) *gorm.DB {
+func (mysqldc MysqlDbContext) GetDb(dsn *DbDsn) *gorm.DB {
 	mysqlconfig := mysql.Config{
 		DSN:                       (*dsn).Dsn(),
 		DefaultStringSize:         191,

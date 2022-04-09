@@ -1,4 +1,4 @@
-package gpaasgorm
+package gorm
 
 type DbDsn interface {
 	Dsn() string
