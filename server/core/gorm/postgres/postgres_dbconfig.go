@@ -2,10 +2,12 @@ package gorm
 
 import (
 	"strings"
+
+	gpaasgorm "github.com/jackyuan2010/gpaas/server/core/gorm"
 )
 
 type PostgresDbConfig struct {
-	DbConfig
+	gpaasgorm.DbConfig
 }
 
 func (dc PostgresDbConfig) Dsn() string {

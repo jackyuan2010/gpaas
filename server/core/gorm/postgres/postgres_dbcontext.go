@@ -1,6 +1,7 @@
 package gorm
 
 import (
+	gpaasgorm "github.com/jackyuan2010/gpaas/server/core/gorm"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -8,7 +9,7 @@ import (
 type PostgresDbContext struct {
 }
 
-func (pgdc PostgresDbContext) GetDb(dsn *DbDsn) *gorm.DB {
+func (pgdc PostgresDbContext) GetDb(dsn *gpaasgorm.DbDsn) *gorm.DB {
 	pgsqlconfig := postgres.Config{
 		DSN:                  (*dsn).Dsn(),
 		PreferSimpleProtocol: false,

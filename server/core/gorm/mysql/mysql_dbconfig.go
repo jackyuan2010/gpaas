@@ -2,10 +2,12 @@ package gorm
 
 import (
 	"strings"
+
+	gpaasgorm "github.com/jackyuan2010/gpaas/server/core/gorm"
 )
 
 type MysqlDbConfig struct {
-	DbConfig
+	gpaasgorm.DbConfig
 }
 
 func (dc MysqlDbConfig) Dsn() string {

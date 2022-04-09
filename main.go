@@ -3,33 +3,17 @@ package main
 import (
 	"fmt"
 
+	config "github.com/jackyuan2010/gpaas/server/core/config"
 	gpaasgorm "github.com/jackyuan2010/gpaas/server/core/gorm"
+	gpaasgormpg "github.com/jackyuan2010/gpaas/server/core/gorm/postgres"
 	model "github.com/jackyuan2010/gpaas/server/core/model"
 )
 
 func main() {
 	fmt.Println("starting......")
-	mt := model.MetadataObject{ObjectApiName: "1212"}
-	fmt.Println(mt)
 
-	var fieldType model.FieldType = 4
-
-	switch fieldType {
-	case model.Text:
-		fmt.Println("Text")
-	case model.LongText:
-		fmt.Println("LongText")
-	case model.Numerric:
-		fmt.Println("Numerric")
-	case model.Image:
-		fmt.Println("Image")
-	default:
-		fmt.Println("Unknown")
-	}
-
-	fmt.Println(model.Image)
-
-	initDB()
+	config.Viper()
+	// initDB()
 }
 
 func initDB() {
@@ -40,7 +24,7 @@ func initDB() {
 	// 	Config: "sslmode=disable TimeZone=Asia/Shanghai",
 	// }
 
-	pgdbconfig := gpaasgorm.NewPostgresDbConfig(
+	pgdbconfig := gpaasgormpg.NewPostgresDbConfig(
 		"172.17.0.2",
 		"gormuser",
 		"gormuser",
@@ -62,8 +46,18 @@ func initDB() {
 
 	// pgdbcontext := gpaasgorm.PostgresDbContext{}
 
-	var dbcontext gpaasgorm.DbContext = gpaasgorm.PostgresDbContext{}
+	var dbcontext gpaasgorm.DbContext = gpaasgormpg.PostgresDbContext{}
 	// dbcontext = pgdbcontext
+
+	var metadatarepository gpaasgorm.MetadataRepository = gpaasgormpg.NewPostgresMetadataRepository(&dbdsn)
+
+	fmt.Println("Repository method start......")
+
+	dd := metadatarepository.QueryByObjectApiName("MetaDataField")
+
+	fmt.Println(dd)
+
+	fmt.Println("Repository method end......")
 
 	db := dbcontext.GetDb(&dbdsn)
 

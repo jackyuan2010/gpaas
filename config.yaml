@@ -1,0 +1,9 @@
+dbconfig:
+  host: '172.17.0.2'
+  port: '5432'
+  config: 'sslmode=disable TimeZone=Asia/Shanghai'
+  dbname: 'gormpg'
+  username: 'gormuser'
+  password: 'gormuser'
+  max_idle_connections: 10
+  max_open_connections: 100
