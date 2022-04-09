@@ -1,4 +1,4 @@
-package gorm
+package gpaasgorm
 
 import (
 	"strings"
@@ -8,9 +8,38 @@ type PostgresDbConfig struct {
 	DbConfig
 }
 
-func (dc *PostgresDbConfig) Dns() string {
-	sb := strings.Builder()
-	sb.append
+func (dc PostgresDbConfig) Dsn() string {
+	var sb strings.Builder
+	sb.WriteString("host=")
+	sb.WriteString(dc.Host)
 
-	return "host=172.17.0.2 user=gormuser password=gormuser dbname=gormpg port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	sb.WriteString(" user=")
+	sb.WriteString(dc.Username)
+
+	sb.WriteString(" password=")
+	sb.WriteString(dc.Password)
+
+	sb.WriteString(" dbname=")
+	sb.WriteString(dc.DbName)
+
+	sb.WriteString(" port=")
+	sb.WriteString(dc.Port)
+
+	sb.WriteString(" ")
+	sb.WriteString(dc.Config)
+	return sb.String()
+}
+
+func NewPostgresDbConfig(
+	host string, username string, password string,
+	dbname string, port string, config string,
+) *PostgresDbConfig {
+	pgdbconfig := PostgresDbConfig{}
+	pgdbconfig.Host = host
+	pgdbconfig.Username = username
+	pgdbconfig.Password = password
+	pgdbconfig.DbName = dbname
+	pgdbconfig.Port = port
+	pgdbconfig.Config = config
+	return &pgdbconfig
 }

@@ -1,4 +1,4 @@
-package gorm
+package gpaasgorm
 
 import (
 	"gorm.io/driver/mysql"
@@ -8,19 +8,20 @@ import (
 type MysqlDbContext struct {
 }
 
-func (pgdc *MysqlDbContext) GetDb(dsn MysqlDbConfig) *gorm.DB {
+func (pgdc *MysqlDbContext) GetDb(dsn *DbDsn) *gorm.DB {
 	mysqlconfig := mysql.Config{
-		DSN:                      dsn.Dsn(),
-		DefaultStringSize:        191,
-		SkipInitalizeWithVersion: false,
+		DSN:                       (*dsn).Dsn(),
+		DefaultStringSize:         191,
+		SkipInitializeWithVersion: false,
 	}
 
 	if db, err := gorm.Open(mysql.New(mysqlconfig), &gorm.Config{}); err != nil {
 		return nil
 	} else {
 		sqlDB, _ := db.DB()
-		sqlDB.SetMaxIdleConns(dsn.MaxIdleConnections)
-		sqlDB.SetMaxOpenConns(dsn.MaxOpenConnections)
+		mysqlconfig := (*dsn).(MysqlDbConfig)
+		sqlDB.SetMaxIdleConns(mysqlconfig.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(mysqlconfig.MaxOpenConns)
 		return db
 	}
 }

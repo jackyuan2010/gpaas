@@ -1,4 +1,4 @@
-package gorm
+package gpaasgorm
 
 import (
 	"strings"
@@ -8,7 +8,7 @@ type MysqlDbConfig struct {
 	DbConfig
 }
 
-func (dc *MysqlDbConfig) Dns() string {
+func (dc MysqlDbConfig) Dsn() string {
 	var sb strings.Builder
 
 	sb.WriteString(dc.Username)
@@ -25,4 +25,18 @@ func (dc *MysqlDbConfig) Dns() string {
 	sb.WriteString("?")
 	sb.WriteString(dc.Config)
 	return sb.String()
+}
+
+func NewMysqlDbConfig(
+	host string, username string, password string,
+	dbname string, port string, config string,
+) *MysqlDbConfig {
+	mysqldbconfig := MysqlDbConfig{}
+	mysqldbconfig.Host = host
+	mysqldbconfig.Username = username
+	mysqldbconfig.Password = password
+	mysqldbconfig.DbName = dbname
+	mysqldbconfig.Port = port
+	mysqldbconfig.Config = config
+	return &mysqldbconfig
 }

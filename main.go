@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 
+	gpaasgorm "github.com/jackyuan2010/gpaas/server/core/gorm"
 	model "github.com/jackyuan2010/gpaas/server/core/model"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func main() {
@@ -34,31 +33,65 @@ func main() {
 }
 
 func initDB() {
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  "host=172.17.0.2 user=gormuser password=gormuser dbname=gormpg port=5432 sslmode=disable TimeZone=Asia/Shanghai",
-		PreferSimpleProtocol: true,
-	}), &gorm.Config{})
+	// dbconfig := gpaasgorm.DbConfig{
+	// 	Host:     "172.17.0.2",
+	// 	Username: "gormuser", Password: "gormuser",
+	// 	DbName: "gormpg", Port: "5432",
+	// 	Config: "sslmode=disable TimeZone=Asia/Shanghai",
+	// }
 
-	if err != nil {
-		panic("failed to connect database:" + err.Error())
-	}
+	pgdbconfig := gpaasgorm.NewPostgresDbConfig(
+		"172.17.0.2",
+		"gormuser",
+		"gormuser",
+		"gormpg",
+		"5432",
+		"sslmode=disable TimeZone=Asia/Shanghai",
+	)
+	// pgdbconfig.Host = "172.17.0.2"
+	// pgdbconfig.Username = "gormuser"
+	// pgdbconfig.Password = "gormuser"
+	// pgdbconfig.DbName = "gormpg"
+	// pgdbconfig.Port = "5432"
+	// pgdbconfig.Config = "sslmode=disable TimeZone=Asia/Shanghai"
 
-	sqlDB, err := db.DB()
+	var dbdsn gpaasgorm.DbDsn = *pgdbconfig
+	// dbdsn = pgdbconfig
 
-	sqlDB.SetMaxIdleConns(5)
-	sqlDB.SetMaxOpenConns(100)
+	println("database source name:", dbdsn.Dsn())
 
-	db.AutoMigrate(&model.MetadataObject{})
-	db.AutoMigrate(&model.MetadataField{})
+	// pgdbcontext := gpaasgorm.PostgresDbContext{}
 
-	field := model.MetadataField{IsRequired: true, IsUnique: false,
-		FieldApiName: "FieldApiName",
-		FieldType:    model.Text, FieldLabel: "FieldLabel", Description: "MetaDataFiled"}
+	var dbcontext gpaasgorm.DbContext = gpaasgorm.PostgresDbContext{}
+	// dbcontext = pgdbcontext
 
-	object := model.MetadataObject{ObjectApiName: "MetaDataField"}
-	object.ObjectFields = append(object.ObjectFields, field)
+	db := dbcontext.GetDb(&dbdsn)
 
-	db.Create(&object)
+	// db, err := gorm.Open(postgres.New(postgres.Config{
+	// 	DSN:                  "host=172.17.0.2 user=gormuser password=gormuser dbname=gormpg port=5432 sslmode=disable TimeZone=Asia/Shanghai",
+	// 	PreferSimpleProtocol: true,
+	// }), &gorm.Config{})
+
+	// if err != nil {
+	// 	panic("failed to connect database:" + err.Error())
+	// }
+
+	// sqlDB, err := db.DB()
+
+	// sqlDB.SetMaxIdleConns(5)
+	// sqlDB.SetMaxOpenConns(100)
+
+	// db.AutoMigrate(&model.MetadataObject{})
+	// db.AutoMigrate(&model.MetadataField{})
+
+	// field := model.MetadataField{IsRequired: true, IsUnique: false,
+	// 	FieldApiName: "FieldApiName",
+	// 	FieldType:    model.Text, FieldLabel: "FieldLabel", Description: "MetaDataFiled"}
+
+	// object := model.MetadataObject{ObjectApiName: "MetaDataField"}
+	// object.ObjectFields = append(object.ObjectFields, field)
+
+	// db.Create(&object)
 
 	firstDBEntity := model.MetadataObject{}
 

@@ -1,4 +1,4 @@
-package gorm
+package gpaasgorm
 
 import (
 	"gorm.io/driver/postgres"
@@ -8,9 +8,9 @@ import (
 type PostgresDbContext struct {
 }
 
-func (pgdc *PostgresDbContext) GetDb(dsn PostgresDbConfig) *gorm.DB {
+func (pgdc PostgresDbContext) GetDb(dsn *DbDsn) *gorm.DB {
 	pgsqlconfig := postgres.Config{
-		DSN:                  dsn.Dsn(),
+		DSN:                  (*dsn).Dsn(),
 		PreferSimpleProtocol: false,
 	}
 
@@ -18,8 +18,9 @@ func (pgdc *PostgresDbContext) GetDb(dsn PostgresDbConfig) *gorm.DB {
 		return nil
 	} else {
 		sqlDB, _ := db.DB()
-		sqlDB.SetMaxIdleConns(dsn.MaxIdleConnections)
-		sqlDB.SetMaxOpenConns(dsn.MaxOpenConnections)
+		pgsqlconfig := (*dsn).(PostgresDbConfig)
+		sqlDB.SetMaxIdleConns(pgsqlconfig.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(pgsqlconfig.MaxOpenConns)
 		return db
 	}
 }
