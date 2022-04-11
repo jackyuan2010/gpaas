@@ -13,25 +13,27 @@ func main() {
 	fmt.Println("starting......")
 
 	config.Viper()
-	// initDB()
+	initDB()
 }
 
 func initDB() {
-	// dbconfig := gpaasgorm.DbConfig{
-	// 	Host:     "172.17.0.2",
-	// 	Username: "gormuser", Password: "gormuser",
-	// 	DbName: "gormpg", Port: "5432",
-	// 	Config: "sslmode=disable TimeZone=Asia/Shanghai",
-	// }
+	dbconfig := gpaasgorm.DbConfig{
+		Host:     "172.17.0.2",
+		Username: "gormuser", Password: "gormuser",
+		DbName: "gormpg", Port: "5432",
+		Config: "sslmode=disable TimeZone=Asia/Shanghai",
+	}
 
-	pgdbconfig := gpaasgormpg.NewPostgresDbConfig(
-		"172.17.0.2",
-		"gormuser",
-		"gormuser",
-		"gormpg",
-		"5432",
-		"sslmode=disable TimeZone=Asia/Shanghai",
-	)
+	pgdbconfig := gpaasgormpg.Converte2PostgresDbConfig(&dbconfig)
+
+	// pgdbconfig := gpaasgormpg.NewPostgresDbConfig(
+	// 	"172.17.0.2",
+	// 	"gormuser",
+	// 	"gormuser",
+	// 	"gormpg",
+	// 	"5432",
+	// 	"sslmode=disable TimeZone=Asia/Shanghai",
+	// )
 	// pgdbconfig.Host = "172.17.0.2"
 	// pgdbconfig.Username = "gormuser"
 	// pgdbconfig.Password = "gormuser"

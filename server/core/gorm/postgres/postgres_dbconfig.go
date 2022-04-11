@@ -7,7 +7,7 @@ import (
 )
 
 type PostgresDbConfig struct {
-	gpaasgorm.DbConfig
+	gpaasgorm.DbConfig `mapstructure:"dbconfig" json:"dbconfig" yaml:"dbconfig"`
 }
 
 func (dc PostgresDbConfig) Dsn() string {
@@ -43,5 +43,11 @@ func NewPostgresDbConfig(
 	pgdbconfig.DbName = dbname
 	pgdbconfig.Port = port
 	pgdbconfig.Config = config
+	return &pgdbconfig
+}
+
+func Converte2PostgresDbConfig(dbconfig *gpaasgorm.DbConfig) *PostgresDbConfig {
+	pgdbconfig := PostgresDbConfig{}
+	pgdbconfig.DbConfig = *dbconfig
 	return &pgdbconfig
 }

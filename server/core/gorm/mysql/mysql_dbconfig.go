@@ -7,7 +7,7 @@ import (
 )
 
 type MysqlDbConfig struct {
-	gpaasgorm.DbConfig
+	gpaasgorm.DbConfig `mapstructure:"dbconfig" json:"dbconfig" yaml:"dbconfig"`
 }
 
 func (dc MysqlDbConfig) Dsn() string {
@@ -40,5 +40,11 @@ func NewMysqlDbConfig(
 	mysqldbconfig.DbName = dbname
 	mysqldbconfig.Port = port
 	mysqldbconfig.Config = config
+	return &mysqldbconfig
+}
+
+func Converte2MysqlDbConfig(dbconfig *gpaasgorm.DbConfig) *PostgresDbConfig {
+	mysqldbconfig := MysqlDbConfig{}
+	mysqldbconfig.DbConfig = *dbconfig
 	return &mysqldbconfig
 }
