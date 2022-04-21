@@ -8,8 +8,9 @@ import (
 )
 
 type ServerConfig struct {
-	DbType   string             `mapstructure:"dbtype" json:"dbtype" yaml:"dbtype"`
-	DbConfig gpaasgorm.DbConfig `mapstructure:"dbconfig" json:"dbconfig" yaml:"dbconfig"`
+	DbType    string             `mapstructure:"dbtype" json:"dbtype" yaml:"dbtype"`
+	DbConfig  gpaasgorm.DbConfig `mapstructure:"dbconfig" json:"dbconfig" yaml:"dbconfig"`
+	JWTConfig JWTConfig          `mapstructure:"jwtconfig" json:"jwtconfig" yaml:"jwtconfig"`
 }
 
 func Viper() *viper.Viper {

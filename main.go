@@ -3,17 +3,21 @@ package main
 import (
 	"fmt"
 
-	config "github.com/jackyuan2010/gpaas/server/core/config"
+	"github.com/golang-jwt/jwt"
 	gpaasgorm "github.com/jackyuan2010/gpaas/server/core/gorm"
 	gpaasgormpg "github.com/jackyuan2010/gpaas/server/core/gorm/postgres"
 	model "github.com/jackyuan2010/gpaas/server/core/model"
+	gpaasjwt "github.com/jackyuan2010/gpaas/server/gin/jwt"
+	uuid "github.com/satori/go.uuid"
 )
 
 func main() {
 	fmt.Println("starting......")
 
-	config.Viper()
-	initDB()
+	// config.Viper()
+	// initDB()
+
+	jwtTest()
 }
 
 func initDB() {
@@ -63,6 +67,10 @@ func initDB() {
 
 	db := dbcontext.GetDb(&dbdsn)
 
+	sqlDB, _ := db.DB()
+
+	defer sqlDB.Close()
+
 	// db, err := gorm.Open(postgres.New(postgres.Config{
 	// 	DSN:                  "host=172.17.0.2 user=gormuser password=gormuser dbname=gormpg port=5432 sslmode=disable TimeZone=Asia/Shanghai",
 	// 	PreferSimpleProtocol: true,
@@ -98,4 +106,23 @@ func initDB() {
 	db.Preload("ObjectFields").First(&firstDBEntity, "object_api_name=?", "MetaDataField")
 
 	fmt.Println(firstDBEntity)
+}
+
+func jwtTest() {
+	jwtClaims := gpaasjwt.JWTClaims{
+		UserId:         uuid.NewV4(),
+		UserName:       "longyan",
+		StandardClaims: jwt.StandardClaims{},
+	}
+	tokenString := gpaasjwt.GernerateToken(&jwtClaims)
+	fmt.Println(tokenString)
+
+	dd := gpaasjwt.ParseToken(tokenString)
+	fmt.Println(*dd)
+
+	tokenString = gpaasjwt.Refresh(tokenString)
+	fmt.Println(tokenString)
+
+	dd = gpaasjwt.ParseToken(tokenString)
+	fmt.Println(*dd)
 }
